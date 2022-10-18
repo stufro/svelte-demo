@@ -1,12 +1,11 @@
 <script>
-    import { current_component } from "svelte/internal";
     import Currency from './lib/Currency.svelte'
 
-  let data;
+  let promise;
 
-  const fetchData = async () => {
-    data = await fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
-                 .then((response) => response.json())
+  const fetchData = () => {
+    promise = fetch('https://api.coindesk.com/v1/bpi/currentprice.json')
+              .then((response) => response.json())
   }
 </script>
 
@@ -16,15 +15,23 @@
   <div class="card">
     <button on:click={fetchData}>Fetch Bitcoin exchange rates</button>
 
-    {#if data}
-      <h2>{data.chartName} Exchange Rates</h2>
-      <i>Last updated: {data.time.updated}</i>
+    {#if promise}
+      {#await promise}
+        <div class="card">
+          <i>Loading...</i>
+        </div>
+      {:then data}
+        <h2>{data.chartName} Exchange Rates</h2>
+        <i>Last updated: {data.time.updated}</i>
 
-      <div class="d-flex">
-        {#each Object.values(data.bpi) as currency}
-          <Currency currency={currency}/>
-        {/each}
-      </div>
+        <div class="d-flex">
+          {#each Object.values(data.bpi) as currency}
+            <Currency currency={currency}/>
+          {/each}
+        </div>
+      {:catch error}
+        <h2>{error}</h2>
+      {/await}
     {/if}
   </div>
 </main>
