@@ -1,5 +1,6 @@
 <script>
     import { current_component } from "svelte/internal";
+    import Currency from './lib/Currency.svelte'
 
   let data;
 
@@ -21,12 +22,7 @@
 
       <div class="d-flex">
         {#each Object.values(data.bpi) as currency}
-          <div class="card">
-            <h3>{currency.code}</h3>
-            <i>{currency.description}</i>
-
-            <p>{currency.rate}</p>
-          </div>
+          <Currency currency={currency}/>
         {/each}
       </div>
     {/if}
