@@ -1,5 +1,5 @@
 <script>
-    import Currency from './lib/Currency.svelte'
+  import Currency from './lib/Currency.svelte'
 
   let promise;
 
